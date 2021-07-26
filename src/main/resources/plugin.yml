@@ -1,0 +1,6 @@
+name: Lobby
+version: ${version}
+main: xyz.n7mn.dev.lobby.Lobby
+api-version: 1.17
+authors: [ 7mi_chan ]
+description: Lobby Plugins
