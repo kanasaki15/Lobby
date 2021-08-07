@@ -26,17 +26,12 @@ public class LobbyEvent implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void PlayerJumpEvent (PlayerJumpEvent e){
-        Player player = e.getPlayer();
-
-        if (!player.isOp()){
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerTeleportEvent (PlayerTeleportEvent e){
         Player player = e.getPlayer();
+
+        if (e.getTo().equals(plugin.getServer().getWorld("world").getSpawnLocation())){
+            return;
+        }
 
         if (!player.isOp()){
             e.setCancelled(true);
@@ -64,15 +59,6 @@ public class LobbyEvent implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void PlayerMoveEvent (PlayerMoveEvent e){
-        Player player = e.getPlayer();
-
-        if (!player.isOp()){
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
     public void BlockBreakEvent  (BlockBreakEvent e){
         Player player = e.getPlayer();
 
@@ -93,5 +79,11 @@ public class LobbyEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerJoinEvent (PlayerJoinEvent e){
         e.getPlayer().setGameMode(GameMode.CREATIVE);
+
+        if (e.getPlayer().isOp()){
+            return;
+        }
+
+        e.getPlayer().teleport(plugin.getServer().getWorld("world").getSpawnLocation());
     }
 }
