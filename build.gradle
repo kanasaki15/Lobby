@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
     compileOnly 'net.pl3x.purpur:purpur-api:1.17.1-R0.1-SNAPSHOT'
+    implementation 'mysql:mysql-connector-java:8.0.26'
 }
 
 processResources {
