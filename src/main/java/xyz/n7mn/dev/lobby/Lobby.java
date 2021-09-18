@@ -20,7 +20,7 @@ public final class Lobby extends JavaPlugin {
             public void run() {
                 for (Player player : getServer().getOnlinePlayers()){
                     player.sendMessage(Component.text(ChatColor.YELLOW + "[ななみ鯖]"+ChatColor.RESET + "ここはロビー鯖です。"));
-                    player.sendMessage(Component.text(ChatColor.YELLOW + "[ななみ鯖]"+ChatColor.RESET + "Discord : https://discord.gg/VWA3qQZzN3").clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/VWA3qQZzN3")));
+                    player.sendMessage(Component.text(ChatColor.YELLOW + "[ななみ鯖]"+ChatColor.RESET + "Discord : "+getConfig().getString("discordURL")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, getConfig().getString("discordURL"))));
                 }
             }
         };
