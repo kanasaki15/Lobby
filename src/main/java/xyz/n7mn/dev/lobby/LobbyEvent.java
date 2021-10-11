@@ -82,7 +82,6 @@ public class LobbyEvent implements Listener {
         }
 
         e.getPlayer().teleport(plugin.getServer().getWorld("world").getSpawnLocation());
-
         LobbyBook.openBook(e.getPlayer(), plugin);
     }
 
@@ -116,4 +115,19 @@ public class LobbyEvent implements Listener {
             e.setCancelled(true);
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PlayerEggThrowEvent (PlayerEggThrowEvent e){
+        if (!e.getPlayer().isOp()){
+            e.setHatching(false);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PlayerItemConsumeEvent (PlayerItemConsumeEvent e){
+        if (!e.getPlayer().isOp()){
+            e.setCancelled(true);
+        }
+    }
+
 }
