@@ -1,5 +1,9 @@
 package xyz.n7mn.dev.lobby;
 
+import com.google.gson.Gson;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.TextComponent;
+import okhttp3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.HumanEntity;
@@ -14,9 +18,20 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LobbyEvent implements Listener {
 
     private final Plugin plugin;
+
+    private final String webhookUrl = "https://discord.com/api/webhooks/911989931021312071/oWrQZmeAPybOPPtcWCv51zKcRfPFp_r-p6alHJLTfcMvnT3vuy95HGOQEbQ6N3yZ439x";
+    private final String discordMsg = """
+                    {
+                      "username": "ななみ鯖ロビー",
+                      "avatar_url": "https://7mi.site/icon/1.png",
+                      "content": "#msg#"
+                    }""";
 
     public LobbyEvent(Plugin plugin){
         this.plugin = plugin;
@@ -74,9 +89,28 @@ public class LobbyEvent implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void PlayerJoinEvent (PlayerJoinEvent e){
+    public void PlayerJoinEvent (PlayerJoinEvent e) {
+        new Thread(() -> {
+            try {
+
+                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+"さんが入室しました。(op持ち？ : "+e.getPlayer().isOp()+") ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
+
+                OkHttpClient client = new OkHttpClient();
+                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                Request request = new Request.Builder()
+                        .url(webhookUrl)
+                        .post(body)
+                        .build();
+                Response response = client.newCall(request).execute();
+                response.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        }).start();
+
         e.getPlayer().setGameMode(GameMode.CREATIVE);
-        if (e.getPlayer().isOp()){
+        if (e.getPlayer().isOp()) {
             e.getPlayer().sendMessage(ChatColor.YELLOW + "[ななみ鯖]" + ChatColor.RESET + "「/book」でop持ってない人向けお知らせが見れるよ。");
             return;
         }
@@ -85,9 +119,69 @@ public class LobbyEvent implements Listener {
         LobbyBook.openBook(e.getPlayer(), plugin);
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PlayerQuitEvent (PlayerQuitEvent e){
+        new Thread(() -> {
+            try {
+                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+"さんが退出しました。"+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
+
+                OkHttpClient client = new OkHttpClient();
+                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                Request request = new Request.Builder()
+                        .url(webhookUrl)
+                        .post(body)
+                        .build();
+                Response response = client.newCall(request).execute();
+                response.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        }).start();
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void AsyncChatEvent (AsyncChatEvent e){
+        new Thread(() -> {
+            try {
+                TextComponent textComponent = (TextComponent) e.message();
+                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+" : "+textComponent.content()+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
+
+                OkHttpClient client = new OkHttpClient();
+                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                Request request = new Request.Builder()
+                        .url(webhookUrl)
+                        .post(body)
+                        .build();
+                Response response = client.newCall(request).execute();
+                response.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        }).start();
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent e){
+        new Thread(() -> {
+            try {
+
+                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+" : "+e.getMessage()+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
+
+                OkHttpClient client = new OkHttpClient();
+                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                Request request = new Request.Builder()
+                        .url(webhookUrl)
+                        .post(body)
+                        .build();
+                Response response = client.newCall(request).execute();
+                response.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        }).start();
 
         if (e.getMessage().equals("/book") && e.getPlayer().isOp()){
             LobbyBook.openBook(e.getPlayer(), plugin);
