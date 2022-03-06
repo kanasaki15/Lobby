@@ -20,6 +20,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
 
 public class LobbyEvent implements Listener {
 
@@ -123,7 +124,7 @@ public class LobbyEvent implements Listener {
     public void PlayerQuitEvent (PlayerQuitEvent e){
         new Thread(() -> {
             try {
-                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+"さんが退出しました。"+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
+                String msg = discordMsg.replaceAll("#msg#", Matcher.quoteReplacement(e.getPlayer().getName()+"さんが退出しました。"+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]"));
 
                 OkHttpClient client = new OkHttpClient();
                 RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
@@ -142,10 +143,11 @@ public class LobbyEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void AsyncChatEvent (AsyncChatEvent e){
+
         new Thread(() -> {
             try {
                 TextComponent textComponent = (TextComponent) e.message();
-                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+" : "+textComponent.content()+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
+                String msg = discordMsg.replaceAll("#msg#",Matcher.quoteReplacement(e.getPlayer().getName()+" : "+textComponent.content()+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]"));
 
                 OkHttpClient client = new OkHttpClient();
                 RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
@@ -194,13 +196,13 @@ public class LobbyEvent implements Listener {
         }
 
         String s = e.getMessage();
-        if (s.startsWith("/plugins") || s.equals("/pl")){
+        if (s.startsWith("/plugins") || s.equals("/pl") || s.equals("/bukkit:plugins") || s.equals("/bukkit:pl")){
             e.getPlayer().sendMessage("Plugins (0): ");
             e.setCancelled(true);
             return;
         }
 
-        if (s.startsWith("/version") || s.equals("/ver") || s.startsWith("/ver ")){
+        if (s.startsWith("/version") || s.equals("/ver") || s.startsWith("/ver ") || s.startsWith("/bukkit:version") || s.equals("/bukkit:ver") || s.startsWith("/bukkit:ver ")){
             e.getPlayer().sendMessage("" +
                     "----- ななみ鯖 (ロビー) -----\n" +
                     "接続可能バージョン： 1.8 ～ " + plugin.getServer().getMinecraftVersion() + "\n" +
