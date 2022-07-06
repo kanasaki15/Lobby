@@ -40,7 +40,7 @@ public class LobbyEvent implements Listener {
                       "content": "#msg#"
                     }""";
 
-    private Map<Integer, String> protocolVersionList = new HashMap<>();
+    private final Map<Integer, String> protocolVersionList = new HashMap<>();
 
 
     public LobbyEvent(Plugin plugin){
@@ -145,7 +145,7 @@ public class LobbyEvent implements Listener {
                 String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+"さんが入室しました。(Ver: "+ver+" op持ち？ : "+e.getPlayer().isOp()+") ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
 
                 OkHttpClient client = new OkHttpClient();
-                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                RequestBody body = RequestBody.create(msg, MediaType.get("application/json; charset=utf-8"));
                 Request request = new Request.Builder()
                         .url(webhookUrl)
                         .post(body)
@@ -175,7 +175,7 @@ public class LobbyEvent implements Listener {
                 String msg = discordMsg.replaceAll("#msg#", Matcher.quoteReplacement(e.getPlayer().getName()+"さんが退出しました。"+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]"));
 
                 OkHttpClient client = new OkHttpClient();
-                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                RequestBody body = RequestBody.create(msg, MediaType.get("application/json; charset=utf-8"));
                 Request request = new Request.Builder()
                         .url(webhookUrl)
                         .post(body)
@@ -198,7 +198,7 @@ public class LobbyEvent implements Listener {
                 String msg = discordMsg.replaceAll("#msg#",Matcher.quoteReplacement(e.getPlayer().getName()+" : "+textComponent.content()+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]"));
 
                 OkHttpClient client = new OkHttpClient();
-                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                RequestBody body = RequestBody.create(msg, MediaType.get("application/json; charset=utf-8"));
                 Request request = new Request.Builder()
                         .url(webhookUrl)
                         .post(body)
@@ -220,7 +220,7 @@ public class LobbyEvent implements Listener {
                 String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+" : "+e.getMessage()+" ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
 
                 OkHttpClient client = new OkHttpClient();
-                RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);
+                RequestBody body = RequestBody.create(msg, MediaType.get("application/json; charset=utf-8"));
                 Request request = new Request.Builder()
                         .url(webhookUrl)
                         .post(body)
