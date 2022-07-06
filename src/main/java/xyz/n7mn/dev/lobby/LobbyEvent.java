@@ -1,6 +1,9 @@
 package xyz.n7mn.dev.lobby;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.viaversion.viaversion.api.Via;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
 import okhttp3.*;
@@ -18,15 +21,18 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 public class LobbyEvent implements Listener {
 
     private final Plugin plugin;
 
-    private final String webhookUrl = "https://discord.com/api/webhooks/911989931021312071/oWrQZmeAPybOPPtcWCv51zKcRfPFp_r-p6alHJLTfcMvnT3vuy95HGOQEbQ6N3yZ439x";
+    private final String webhookUrl;
     private final String discordMsg = """
                     {
                       "username": "ななみ鯖ロビー",
@@ -34,8 +40,49 @@ public class LobbyEvent implements Listener {
                       "content": "#msg#"
                     }""";
 
+    private Map<Integer, String> protocolVersionList = new HashMap<>();
+
+
     public LobbyEvent(Plugin plugin){
         this.plugin = plugin;
+        webhookUrl = plugin.getConfig().getString("DiscordWebhookURL");
+
+        try {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url("https://gitlab.bixilon.de/bixilon/minosoft/-/raw/master/src/main/resources/assets/minosoft/mapping/versions.json?inline=false")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String json = response.body().string();
+
+            JsonObject list = new Gson().fromJson(json, JsonObject.class);
+            int i = 0;
+            while (true){
+
+                if (i > 1000){
+                    return;
+                }
+
+                String s = String.valueOf(i);
+                if (list.get(s) == null){
+                    i++;
+                    continue;
+                }
+
+                JsonElement element = list.get(s);
+                JsonObject object = element.getAsJsonObject();
+                if (object.get("protocol_id") == null){
+                    protocolVersionList.put(i, object.get("name").getAsString());
+                } else {
+                    protocolVersionList.put(object.get("protocol_id").getAsInt(), object.get("name").getAsString());
+                }
+                i++;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -94,7 +141,8 @@ public class LobbyEvent implements Listener {
         new Thread(() -> {
             try {
 
-                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+"さんが入室しました。(op持ち？ : "+e.getPlayer().isOp()+") ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
+                String ver = protocolVersionList.get(Via.getAPI().getPlayerVersion(e.getPlayer().getUniqueId()));
+                String msg = discordMsg.replaceAll("#msg#",e.getPlayer().getName()+"さんが入室しました。(Ver: "+ver+" op持ち？ : "+e.getPlayer().isOp()+") ["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"]");
 
                 OkHttpClient client = new OkHttpClient();
                 RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), msg);

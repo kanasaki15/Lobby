@@ -20,13 +20,21 @@ repositories {
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
 
+    maven {
+        name = 'viaversion-repo'
+        url = 'https://repo.viaversion.com'
+    }
+    mavenCentral()
+
 }
 
 dependencies {
-    compileOnly 'org.purpurmc.purpur:purpur-api:1.18.2-R0.1-SNAPSHOT'
-    implementation 'mysql:mysql-connector-java:8.0.26'
+    compileOnly 'org.purpurmc.purpur:purpur-api:1.19-R0.1-SNAPSHOT'
+    implementation 'mysql:mysql-connector-java:8.0.29'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
+    compileOnly 'com.viaversion:viaversion-api:4.3.1'
 }
 
 processResources {

@@ -5,4 +5,5 @@ MySQLOption: '?allowPublicKeyRetrieval=true&useSSL=false'
 MySQLUsername: ''
 MySQLPassword: ''
 
-discordURL : ''
+discordURL: ''
+DiscordWebhookURL: ''

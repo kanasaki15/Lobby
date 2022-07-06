@@ -3,5 +3,6 @@ version: ${version}
 main: xyz.n7mn.dev.lobby.Lobby
 api-version: 1.18
 authors: [ 7mi_chan ]
+depend: [ViaVersion]
 description: Lobby Plugins
 softdepend: [NanamiPlayerSystem]
