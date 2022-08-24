@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'java'
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "7.1.1"
 }
 
 group = 'xyz.n7mn.dev'
@@ -29,12 +29,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.purpurmc.purpur:purpur-api:1.19-R0.1-SNAPSHOT'
-    implementation 'mysql:mysql-connector-java:8.0.29'
+    compileOnly 'org.purpurmc.purpur:purpur-api:1.19.2-R0.1-SNAPSHOT'
+    implementation 'mysql:mysql-connector-java:8.0.30'
 
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 
-    compileOnly 'com.viaversion:viaversion-api:4.3.1'
+    compileOnly 'com.viaversion:viaversion-api:4.4.1'
+    implementation 'com.google.code.gson:gson:2.9.1'
 }
 
 processResources {

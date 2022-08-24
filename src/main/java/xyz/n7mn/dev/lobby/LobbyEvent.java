@@ -1,6 +1,7 @@
 package xyz.n7mn.dev.lobby;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.viaversion.viaversion.api.Via;
@@ -51,35 +52,44 @@ public class LobbyEvent implements Listener {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url("https://gitlab.bixilon.de/bixilon/minosoft/-/raw/master/src/main/resources/assets/minosoft/mapping/versions.json?inline=false")
+                    .url("https://raw.githubusercontent.com/hugmanrique/mc-versions/main/versions.json")
                     .build();
             Response response = client.newCall(request).execute();
             String json = response.body().string();
 
             JsonObject list = new Gson().fromJson(json, JsonObject.class);
-            int i = 0;
-            while (true){
+            JsonElement editions = list.get("editions");
+            JsonElement java = editions.getAsJsonObject().get("java");
+            JsonArray versions = java.getAsJsonObject().get("versions").getAsJsonArray();
 
-                if (i > 1000){
-                    return;
-                }
+            boolean end = false;
+            for (int i = 0; i < versions.size(); i++){
+                String version = versions.get(i).getAsJsonObject().get("name").getAsString();
 
-                String s = String.valueOf(i);
-                if (list.get(s) == null){
-                    i++;
-                    continue;
-                }
+                int protocolNumber = 0;
+                if (!versions.get(i).getAsJsonObject().get("protocolNumber").isJsonNull()){
+                    protocolNumber = versions.get(i).getAsJsonObject().get("protocolNumber").getAsInt();
 
-                JsonElement element = list.get(s);
-                JsonObject object = element.getAsJsonObject();
-                if (object.get("protocol_id") == null){
-                    protocolVersionList.put(i, object.get("name").getAsString());
-                } else {
-                    protocolVersionList.put(object.get("protocol_id").getAsInt(), object.get("name").getAsString());
+                    if (!end && versions.get(i).getAsJsonObject().get("protocolNumber").getAsInt() == 0){
+                        end = true;
+                    }
+
+                    if (end && protocolNumber != 0){
+                        break;
+                    }
+                };
+
+
+                if (protocolVersionList.get(protocolNumber) != null){
+                    version = version + "/" + protocolVersionList.get(protocolNumber);
                 }
-                i++;
+                protocolVersionList.put(protocolNumber, version);
+
+
             }
-        } catch (IOException e){
+
+
+        } catch (Exception e){
             e.printStackTrace();
         }
 
