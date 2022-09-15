@@ -21,6 +21,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
+import org.purpurmc.purpur.event.entity.MonsterEggSpawnEvent;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -143,6 +144,13 @@ public class LobbyEvent implements Listener {
 
         if (!player.isOp()){
             e.setBuildable(false);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void MonsterEggSpawnEvent(MonsterEggSpawnEvent e){
+        if (!e.getPlayer().isOp()){
+            e.setCancelled(true);
         }
     }
 
