@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.lobby;
 
+import com.destroystokyo.paper.event.entity.ThrownEggHatchEvent;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,9 +22,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
-import org.purpurmc.purpur.event.entity.MonsterEggSpawnEvent;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public class LobbyEvent implements Listener {
     private final String discordMsg = """
                     {
                       "username": "ななみ鯖ロビー",
-                      "avatar_url": "https://7mi.site/icon/1.png",
+                      "avatar_url": "https://s3.7mi.site/nana-miss/4d83fce8-fbd8-4914-8e55-8bc87df0277d.png",
                       "content": "#msg#"
                     }""";
 
@@ -148,9 +147,9 @@ public class LobbyEvent implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void MonsterEggSpawnEvent(MonsterEggSpawnEvent e){
+    public void MonsterEggSpawnEvent(PlayerEggThrowEvent e){
         if (!e.getPlayer().isOp()){
-            e.setCancelled(true);
+            e.setHatching(false);
         }
     }
 

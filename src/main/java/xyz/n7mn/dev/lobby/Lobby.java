@@ -2,6 +2,7 @@ package xyz.n7mn.dev.lobby;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,8 +20,10 @@ public final class Lobby extends JavaPlugin {
             @Override
             public void run() {
                 for (Player player : getServer().getOnlinePlayers()){
-                    player.sendMessage(Component.text(ChatColor.YELLOW + "[ななみ鯖]"+ChatColor.RESET + "ここはロビー鯖です。"));
-                    player.sendMessage(Component.text(ChatColor.YELLOW + "[ななみ鯖]"+ChatColor.RESET + "Discord : "+getConfig().getString("discordURL")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, getConfig().getString("discordURL"))));
+                    player.sendMessage(Component.text(NamedTextColor.YELLOW + "[ななみ鯖]"+NamedTextColor.WHITE + "ここはロビー鯖です。"));
+                    player.sendMessage(Component.text(NamedTextColor.YELLOW + "[ななみ鯖]"+NamedTextColor.WHITE + "Discord : "+getConfig().getString("discordURL")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, getConfig().getString("discordURL"))));
+
+                    System.gc();
                 }
             }
         };
