@@ -1,7 +1,7 @@
 name: Lobby
 version: ${version}
 main: xyz.n7mn.dev.lobby.Lobby
-api-version: 1.20
+api-version: 1.19
 authors: [ 7mi_chan ]
 depend: [ViaVersion]
 description: Lobby Plugins

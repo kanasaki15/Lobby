@@ -1,8 +1,10 @@
 package xyz.n7mn.dev.lobby;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,8 +22,13 @@ public final class Lobby extends JavaPlugin {
             @Override
             public void run() {
                 for (Player player : getServer().getOnlinePlayers()){
-                    player.sendMessage(Component.text(NamedTextColor.YELLOW + "[ななみ鯖]"+NamedTextColor.WHITE + "ここはロビー鯖です。"));
-                    player.sendMessage(Component.text(NamedTextColor.YELLOW + "[ななみ鯖]"+NamedTextColor.WHITE + "Discord : "+getConfig().getString("discordURL")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, getConfig().getString("discordURL"))));
+                    TextComponent text1 = Component.text("[ななみ鯖] ").color(TextColor.color(NamedTextColor.YELLOW));
+                    text1 = text1.append(Component.text("ここはロビー鯖です。").color(TextColor.color(NamedTextColor.WHITE)));
+                    TextComponent text2 = Component.text("[ななみ鯖] ").color(TextColor.color(NamedTextColor.YELLOW));
+                    text2 = text2.append(Component.text("Discord : ").color(TextColor.color(NamedTextColor.WHITE)));
+                    text2 = text2.append(Component.text(getConfig().getString("discordURL")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, getConfig().getString("discordURL"))));
+                    player.sendMessage(text1);
+                    player.sendMessage(text2);
 
                     System.gc();
                 }
